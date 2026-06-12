@@ -1,0 +1,70 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "emulators",
+			"problemMatcher": [],
+			"label": "Emulators",
+		},
+		{
+			"type": "npm",
+			"script": "start-emulators",
+			"problemMatcher": [],
+			"label": "Frontend",
+			"presentation": {
+				"group": "frontend",
+				"panel": "dedicated",
+				"reveal": "always"
+			}
+		},
+		{
+			"type": "shell",
+			"label": "Frontend-TypeScript-Check",
+			"command": "npx tsc --noEmit --watch",
+			"problemMatcher": [
+				"$tsc-watch"
+			],
+			"presentation": {
+				"group": "frontend",
+				"panel": "dedicated",
+				"reveal": "always"
+			}
+		},
+		{
+			"type": "npm",
+			"path": "functions",
+			"script": "build:watch",
+			"problemMatcher": [],
+			"label": "Functions",
+		},
+		{
+			"type": "shell",
+			"command": "until lsof -Pi :9099 -sTCP:LISTEN; do echo \"Waiting for emulators...\"; sleep 2; done",
+			"problemMatcher": [],
+			"label": "Wait",
+		},
+		{
+			"type": "shell",
+			"command": "cd scripts && ./initEmulators.ts",
+			"problemMatcher": [],
+			"label": "InitEmulators",
+			"dependsOn": [
+				"Wait"
+			],
+		},
+		{
+			"type": "shell",
+			"command": "echo 'Dev env started'",
+			"problemMatcher": [],
+			"label": "dev-env",
+			"dependsOn": [
+				"Emulators",
+				"Frontend",
+				"Frontend-TypeScript-Check",
+				"Functions",
+				"InitEmulators",
+			],
+		},
+	]
+}
